@@ -2,12 +2,13 @@
 from scipy import linalg as la
 import matplotlib.pyplot as pl
 import numpy as np
+import numpy
 import formation_distance as form
 import quadrotor as quad
 import quadlog
 import animation as ani
 #import pycopter_rules as rules
-import boids as rules
+import hector_rules as rules
 
 # Quadrotor
 m = 0.65 # Kg
@@ -80,7 +81,7 @@ tilde_mu = 0e-2*np.array([1, 1, 1])
 fc = form.formation_distance(2, 1, dtriang, mu, tilde_mu, Btriang, 5e-2, 5e-1)
 
 # Simulation parameters
-tf = 2500
+tf = 250
 dt = 5e-2
 time = np.linspace(0, tf, tf/dt)
 it = 0
@@ -90,6 +91,11 @@ frames = 100
 q1_log = quadlog.quadlog(time)
 q2_log = quadlog.quadlog(time)
 q3_log = quadlog.quadlog(time)
+
+q4_log = quadlog.quadlog(time)
+q5_log = quadlog.quadlog(time)
+q6_log = quadlog.quadlog(time)
+
 Ed_log = np.zeros((time.size, fc.edges))
 
 # Plots
@@ -122,22 +128,22 @@ for t in time:
     #q2.set_a_2D_alt_lya(U[2:4], -alt_d)
     #q3.set_a_2D_alt_lya(U[4:6], -alt_d)
     # Simulation
-    rules.flocking(quad_list,q1)
+    rules.flocking(quad_list,q1,40,numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2))
     q1.step(dt)
 
-    rules.flocking(quad_list,q2)
+    rules.flocking(quad_list,q2,40,numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2))
     q2.step(dt)
 
-    rules.flocking(quad_list,q3)
+    rules.flocking(quad_list,q3,40,numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2))
     q3.step(dt)
 
-    rules.flocking(quad_list,q4)
+    rules.flocking(quad_list,q4,40,numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2))
     q4.step(dt)
 
-    rules.flocking(quad_list,q5)
+    rules.flocking(quad_list,q5,40,numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2))
     q5.step(dt)
 
-    rules.flocking(quad_list,q6)
+    rules.flocking(quad_list,q6,40,numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2))
     q6.step(dt)
    
     # Animation
@@ -148,9 +154,9 @@ for t in time:
 	ani.draw3d(axis3d, q2.xyz, q2.Rot_bn(), quadcolor[0])
 	ani.draw3d(axis3d, q3.xyz, q3.Rot_bn(), quadcolor[0])
 	
-	ani.draw3d(axis3d, q4.xyz, q1.Rot_bn(), quadcolor[0])
-	ani.draw3d(axis3d, q5.xyz, q2.Rot_bn(), quadcolor[0])
-	ani.draw3d(axis3d, q6.xyz, q3.Rot_bn(), quadcolor[0])
+	ani.draw3d(axis3d, q4.xyz, q4.Rot_bn(), quadcolor[0])
+	ani.draw3d(axis3d, q5.xyz, q5.Rot_bn(), quadcolor[0])
+	ani.draw3d(axis3d, q6.xyz, q6.Rot_bn(), quadcolor[0])
 
         axis3d.set_xlim(-15, 15)
         axis3d.set_ylim(-15, 15)
@@ -163,21 +169,127 @@ for t in time:
         pl.draw()
 	
 	
-        #pl.figure(1)
-        #pl.clf()
-        #ani.draw2d(1, X, fc, quadcolor)
-        #ani.draw_edges(1, X, fc, -1)
-        #pl.xlabel('South [m]')
-        #pl.ylabel('West [m]')
-        #pl.title('2D Map')
-        #pl.xlim(-s*init_area, s*init_area)
-        #pl.ylim(-s*init_area, s*init_area)
-        #pl.grid()
-        #pl.pause(0.001)
-        #pl.draw()
+         # Log
+    	q1_log.xyz_h[it, :] = q1.xyz
+    	q1_log.att_h[it, :] = q1.att
+    	q1_log.w_h[it, :] = q1.w
+    	q1_log.v_ned_h[it, :] = q1.v_ned
+    	q1_log.xi_g_h[it] = q1.xi_g
+    	q1_log.xi_CD_h[it] = q1.xi_CD
+
+	 # Log
+    	q2_log.xyz_h[it, :] = q2.xyz
+    	q2_log.att_h[it, :] = q2.att
+    	q2_log.w_h[it, :] = q2.w
+    	q2_log.v_ned_h[it, :] = q2.v_ned
+    	q2_log.xi_g_h[it] = q2.xi_g
+    	q2_log.xi_CD_h[it] = q2.xi_CD
+
+
+ 	# Log
+    	q3_log.xyz_h[it, :] = q3.xyz
+    	q3_log.att_h[it, :] = q3.att
+    	q3_log.w_h[it, :] = q3.w
+    	q3_log.v_ned_h[it, :] = q3.v_ned
+    	q3_log.xi_g_h[it] = q3.xi_g
+    	q3_log.xi_CD_h[it] = q3.xi_CD
+
+
+	  # Log
+    	q4_log.xyz_h[it, :] = q4.xyz
+    	q4_log.att_h[it, :] = q4.att
+    	q4_log.w_h[it, :] = q4.w
+    	q4_log.v_ned_h[it, :] = q4.v_ned
+    	q4_log.xi_g_h[it] = q4.xi_g
+    	q4_log.xi_CD_h[it] = q4.xi_CD
+
+	 # Log
+    	q5_log.xyz_h[it, :] = q5.xyz
+    	q5_log.att_h[it, :] = q5.att
+    	q5_log.w_h[it, :] = q5.w
+    	q5_log.v_ned_h[it, :] = q5.v_ned
+    	q5_log.xi_g_h[it] = q5.xi_g
+    	q5_log.xi_CD_h[it] = q5.xi_CD
+
+
+ 	# Log
+    	q6_log.xyz_h[it, :] = q6.xyz
+    	q6_log.att_h[it, :] = q6.att
+    	q6_log.w_h[it, :] = q6.w
+    	q6_log.v_ned_h[it, :] = q6.v_ned
+    	q6_log.xi_g_h[it] = q6.xi_g
+    	q6_log.xi_CD_h[it] = q6.xi_CD
+
+
     it+=1
  
 # Stop if crash
     if (q1.crashed == 1):
         break
+
+
+pl.figure(1)
+pl.plot(time, -q1_log.v_ned_h[:, 2], label="-V_z")
+pl.plot(time, q1_log.v_ned_h[:, 0], label="V_x")
+pl.plot(time, q1_log.v_ned_h[:, 1], label="V_y")
+pl.xlabel("Time [s]")
+pl.ylabel("Velocity [m/s]")
+pl.grid()
+pl.legend()
+
+pl.figure(2)
+pl.plot(time, -q2_log.v_ned_h[:, 2], label="-V_z")
+pl.plot(time, q2_log.v_ned_h[:, 0], label="V_x")
+pl.plot(time, q2_log.v_ned_h[:, 1], label="V_y")
+pl.xlabel("Time [s]")
+pl.ylabel("Velocity [m/s]")
+pl.grid()
+pl.legend()
+
+pl.figure(3)
+pl.plot(time, -q3_log.v_ned_h[:, 2], label="-V_z")
+pl.plot(time, q3_log.v_ned_h[:, 0], label="V_x")
+pl.plot(time, q3_log.v_ned_h[:, 1], label="V_y")
+pl.xlabel("Time [s]")
+pl.ylabel("Velocity [m/s]")
+pl.grid()
+pl.legend()
+
+pl.figure(4)
+pl.plot(time, -q4_log.v_ned_h[:, 2], label="-V_z")
+pl.plot(time, q4_log.v_ned_h[:, 0], label="V_x")
+pl.plot(time, q4_log.v_ned_h[:, 1], label="V_y")
+pl.xlabel("Time [s]")
+pl.ylabel("Velocity [m/s]")
+pl.grid()
+pl.legend()
+
+pl.figure(5)
+pl.plot(time, -q5_log.v_ned_h[:, 2], label="-V_z")
+pl.plot(time, q5_log.v_ned_h[:, 0], label="V_x")
+pl.plot(time, q5_log.v_ned_h[:, 1], label="V_y")
+pl.xlabel("Time [s]")
+pl.ylabel("Velocity [m/s]")
+pl.grid()
+pl.legend()
+
+pl.figure(6)
+pl.plot(time, -q6_log.v_ned_h[:, 2], label="-V_z")
+pl.plot(time, q6_log.v_ned_h[:, 0], label="V_x")
+pl.plot(time, q6_log.v_ned_h[:, 1], label="V_y")
+pl.xlabel("Time [s]")
+pl.ylabel("Velocity [m/s]")
+pl.grid()
+pl.legend()
+
+
+
+
+pl.pause(0)
+
+
+
+
+
+
         
