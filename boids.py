@@ -7,14 +7,14 @@ def flocking(boids,current_drone):
     my_separation = separation(boids,current_drone)
     #ali = align(boids,current)     
     my_cohesion = cohesion(boids,current_drone)
-    vres[0]=5*my_separation[0] + my_cohesion [0]
-    vres[1]=5*my_separation[1] + my_cohesion [1]
+    vres[0]=my_separation[0] + my_cohesion [0]
+    vres[1]=my_separation[1] + my_cohesion [1]
     current_drone.set_v_2D_alt_lya(vres[0:2],-alt_d)
     
 
 def separation(boids,current_drone):
 	alt_d=4
-	desiredseparation=300.0
+	desiredseparation=50
 	steer = PVector(0.0, 0.0)
 	count = 0
 	position=current_drone.xyz
@@ -37,7 +37,7 @@ def separation(boids,current_drone):
 	#current_drone.set_a_2D_alt_lya(vres[0:2],-alt_d)
 	return vres
 def cohesion(boids,current_drone):
-	neighbordist = 1000
+	neighbordist = 80
 	sum_vector = PVector(0, 0)
 	count = 0
 	position=current_drone.xyz

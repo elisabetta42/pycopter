@@ -33,6 +33,10 @@ pqr_0 = np.array([0.0, 0.0, 0.0])
 xyz1_0 = np.array([1.0, 1.2, 0.0])
 xyz2_0 = np.array([1.2, 2.0, 0.0])
 xyz3_0 = np.array([-1.1, 2.6, 0.0])
+
+xyz4_0 = np.array([3.0, 3.2, 0.0])
+xyz5_0 = np.array([4.2, 4.0, 0.0])
+xyz6_0 = np.array([-3.2, 4.6, 0.0])
 v_ned_0 = np.array([0.0, 0.0, 0.0])
 w_0 = np.array([0.0, 0.0, 0.0, 0.0])
 
@@ -45,10 +49,23 @@ q2 = quad.quadrotor(2, m, l, J, CDl, CDr, kt, km, kw, \
 
 q3 = quad.quadrotor(3, m, l, J, CDl, CDr, kt, km, kw, \
         att_0, pqr_0, xyz3_0, v_ned_0, w_0)
+
+q4 = quad.quadrotor(4, m, l, J, CDl, CDr, kt, km, kw, \
+        att_0, pqr_0, xyz4_0, v_ned_0, w_0)
+
+q5 = quad.quadrotor(5, m, l, J, CDl, CDr, kt, km, kw, \
+        att_0, pqr_0, xyz5_0, v_ned_0, w_0)
+
+q6 = quad.quadrotor(6, m, l, J, CDl, CDr, kt, km, kw, \
+        att_0, pqr_0, xyz6_0, v_ned_0, w_0)
 quad_list=[]
 quad_list.append(q1)
 quad_list.append(q2)
 quad_list.append(q3)
+
+quad_list.append(q4)
+quad_list.append(q5)
+quad_list.append(q6)
 
 # Formation Control
 # Shape
@@ -63,7 +80,7 @@ tilde_mu = 0e-2*np.array([1, 1, 1])
 fc = form.formation_distance(2, 1, dtriang, mu, tilde_mu, Btriang, 5e-2, 5e-1)
 
 # Simulation parameters
-tf = 250
+tf = 2500
 dt = 5e-2
 time = np.linspace(0, tf, tf/dt)
 it = 0
@@ -87,9 +104,13 @@ s = 2
 
 # Desired altitude and heading
 alt_d = 4
-q1.yaw_d = -np.pi
-q2.yaw_d =  np.pi/2
-q3.yaw_d =  0
+q1.yaw_d =  -np.pi
+q2.yaw_d =  -np.pi
+q3.yaw_d =  -np.pi
+
+q4.yaw_d =  -np.pi
+q5.yaw_d =  -np.pi
+q6.yaw_d =  -np.pi
 
 for t in time:
     # Simulation
@@ -109,6 +130,15 @@ for t in time:
 
     rules.flocking(quad_list,q3)
     q3.step(dt)
+
+    rules.flocking(quad_list,q4)
+    q4.step(dt)
+
+    rules.flocking(quad_list,q5)
+    q5.step(dt)
+
+    rules.flocking(quad_list,q6)
+    q6.step(dt)
    
     # Animation
     if it%frames == 0:
@@ -117,8 +147,13 @@ for t in time:
         ani.draw3d(axis3d, q1.xyz, q1.Rot_bn(), quadcolor[0])
 	ani.draw3d(axis3d, q2.xyz, q2.Rot_bn(), quadcolor[0])
 	ani.draw3d(axis3d, q3.xyz, q3.Rot_bn(), quadcolor[0])
-        axis3d.set_xlim(-10, 10)
-        axis3d.set_ylim(-10, 10)
+	
+	ani.draw3d(axis3d, q4.xyz, q1.Rot_bn(), quadcolor[0])
+	ani.draw3d(axis3d, q5.xyz, q2.Rot_bn(), quadcolor[0])
+	ani.draw3d(axis3d, q6.xyz, q3.Rot_bn(), quadcolor[0])
+
+        axis3d.set_xlim(-15, 15)
+        axis3d.set_ylim(-15, 15)
         axis3d.set_zlim(0, 15)
         axis3d.set_xlabel('South [m]')
         axis3d.set_ylabel('East [m]')

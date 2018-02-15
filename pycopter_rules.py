@@ -38,8 +38,8 @@ def separation(drone_list,current_drone):
 	v=v/magnitude
 			
 	#Opposite direction
-	v[0]*=-0.01
-	v[1]*=-0.01
+	v[0]*=-1
+	v[1]*=-1
 	v[2]=current_drone_xyz[2]
 	return v
 	#current_drone.set_a_2D_alt_lya(v[0:2],-alt_d)	
@@ -90,9 +90,9 @@ def flocking(drone_list,current_drone):
 	vres=numpy.array([0.0,0.0])
 	my_separation=separation(drone_list,current_drone)
 	my_cohesion=cohesion(drone_list,current_drone)
-	vres[0]=my_separation[0] + (4*my_cohesion [0])
-	vres[1]=my_separation[1] + (4*my_cohesion [1])
-	current_drone.set_a_2D_alt_lya(vres[0:2],-alt_d)	
+	vres[0]=my_separation[0] + my_cohesion [0]
+	vres[1]=my_separation[1] + my_cohesion [1]
+	current_drone.set_v_2D_alt_lya(vres[0:2],-alt_d)	
 
 	 	
 		
