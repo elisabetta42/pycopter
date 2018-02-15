@@ -62,7 +62,8 @@ def flocking(agents, current,radius, kva, ks, kc, ke):
 	vel_avg=velAvg.return_as_vector()
 	v_separation=separation.return_as_vector()
 	v_cohesion=cohesion.return_as_vector()
-	desired_velocity=kva*vel_avg + ks*v_separation + kc*v_cohesion
+	v_target=tend_to_place(agents,current)
+	desired_velocity=kva*vel_avg + ks*v_separation + kc*v_cohesion + kc*v_target
 	desiredVel=PVector(desired_velocity[0],desired_velocity[1])
         #desired_velocity +=kva*velAvg + ks*separation + kc*cohesion;
 
@@ -74,7 +75,14 @@ def flocking(agents, current,radius, kva, ks, kc, ke):
     
     #if position.x < 0 or position.x > limitX or position.y < 0 or position.y or limitY:
     #	current.set_v_2D_alt_lya(-error_theta,-alt_d)
-    	
+
+def tend_to_place(agents, current):
+	target=PVector(5,5)
+	position=PVector(current.xyz[0],current.xyz[1])
+	target.subVector(position)
+	target.divScalar(100)
+	target.normalize()
+	return 2*target.return_as_vector()	
 
 
 
