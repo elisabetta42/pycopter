@@ -1,5 +1,6 @@
 import numpy as np
 from scipy import linalg as la
+import math
 
 class quadrotor:
     def __init__(self, tag, m, l, J, CDl, CDr, kt, km, kw, att, \
@@ -339,3 +340,23 @@ class quadrotor:
     def build_vector_from_tensor(self, T):
         v = np.array([T[2, 1], T[0, 2], T[1, 0]])
         return v
+
+    def same_position(self,boid):
+	self_position=self.xyz
+	for drone in boid:
+		
+		if drone.tag!=self.tag:
+			position=drone.xyz
+			x1=self_position[0]
+			x2=position[0]
+			y1=self_position[1]
+			y2=position[1]
+			z1=self_position[2]
+			z2=position[2]
+
+			distance=math.sqrt(pow((x1 - x2), 2) + pow((y1 - y2), 2)+ pow((z1 - z2), 2))
+			print "distance between",self.tag, " and ",drone.tag, " =",distance
+			if distance==0:
+				self.crashed=1
+				print self.tag,"was in the same position as ",drone.tag
+			

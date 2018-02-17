@@ -63,7 +63,10 @@ def flocking(agents, current,radius, kva, ks, kc, ke):
 	v_separation=separation.return_as_vector()
 	v_cohesion=cohesion.return_as_vector()
 	v_target=tend_to_place(agents,current)
-	desired_velocity=kva*vel_avg + ks*v_separation + kc*v_cohesion + kc*v_target
+	random_walk=randomWalkb(position.x,position.y)
+	v_bound_position=bound_position(11,-11,11,-11,position.x,position.y,1)
+	desired_velocity=kva*vel_avg + ks*v_separation + kc*v_cohesion +5*kc*v_target 
+	#ks*v_bound_position+ ks*random_walk
 	desiredVel=PVector(desired_velocity[0],desired_velocity[1])
         #desired_velocity +=kva*velAvg + ks*separation + kc*cohesion;
 
@@ -77,12 +80,43 @@ def flocking(agents, current,radius, kva, ks, kc, ke):
     #	current.set_v_2D_alt_lya(-error_theta,-alt_d)
 
 def tend_to_place(agents, current):
-	target=PVector(5,5)
+	target=PVector(0,0)
 	position=PVector(current.xyz[0],current.xyz[1])
 	target.subVector(position)
-	target.divScalar(100)
+	target.divScalar(50)
 	target.normalize()
-	return 2*target.return_as_vector()	
+	return target.return_as_vector()	
+
+def randomWalkb(x,y):   
+        new = numpy.random.randint(1,4)
+        if new == 1:
+            x += 1
+        elif new == 2:
+            y += 1
+        elif new ==3 :
+            x += -1
+        else :
+            y += -1
+    	new_position=PVector(x,y)
+    	new_position.normalize()  
+    	return new_position.return_as_vector()
+
+def bound_position(Xmin,Xmax,Ymin,Ymax,x,y,constant):
+	v=PVector(0,0)
+
+	if x <= Xmin:
+		v.x = constant
+	elif x >= Xmax:
+		v.x = -constant
+		
+	if y <= Ymin :
+		v.y = constant
+	elif y >= Ymax :
+		v.y = -constant
+		
+	return v.return_as_vector()
+
+
 
 
 

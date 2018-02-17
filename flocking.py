@@ -9,6 +9,8 @@ import quadlog
 import animation as ani
 #import pycopter_rules as rules
 import hector_rules as rules
+import temperature_function as temperature
+from sys import exit
 
 # Quadrotor
 m = 0.65 # Kg
@@ -81,7 +83,7 @@ tilde_mu = 0e-2*np.array([1, 1, 1])
 fc = form.formation_distance(2, 1, dtriang, mu, tilde_mu, Btriang, 5e-2, 5e-1)
 
 # Simulation parameters
-tf = 250
+tf = 2500
 dt = 5e-2
 time = np.linspace(0, tf, tf/dt)
 it = 0
@@ -104,9 +106,29 @@ pl.close("all")
 pl.ion()
 fig = pl.figure(0)
 axis3d = fig.add_subplot(111, projection='3d')
+#ax= fig.add_subplot(111, projection='3d')
+#ax.set_xlim(-15, 15)
+#ax.set_ylim(-15, 15)
+#ax.cla()
+temperature.draw_grid(axis3d)
 
 init_area = 5
 s = 2
+# Make data
+#u = np.linspace(0, 2 * np.pi, 100)
+#v = np.linspace(0, np.pi, 100)
+#x = range(-15,15)
+#y = range(-15,15)
+#x_1,y_1,z = temperature.create_array(15,15,-15,-15)
+# create x,y
+#x, y = numpy.meshgrid(range(15), range(15))
+#x=numpy.asarray(x)
+#y=numpy.asarray(y)
+#x, y, z = np.meshgrid(range(-15,15), range(-15,15),range(-15,15))
+#z = temperature.create_array(x,y,z)
+#z=numpy.asarray(z)
+#pl.pause(0)
+#exit(0)
 
 # Desired altitude and heading
 alt_d = 4
@@ -117,7 +139,7 @@ q3.yaw_d =  -np.pi
 q4.yaw_d =  -np.pi
 q5.yaw_d =  -np.pi
 q6.yaw_d =  -np.pi
-
+radius=1000
 for t in time:
     # Simulation
     #X = np.append(q1.xyz[0:2], np.append(q2.xyz[0:2], q3.xyz[0:2]))
@@ -128,28 +150,40 @@ for t in time:
     #q2.set_a_2D_alt_lya(U[2:4], -alt_d)
     #q3.set_a_2D_alt_lya(U[4:6], -alt_d)
     # Simulation
-    rules.flocking(quad_list,q1,40,numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2))
+    rules.flocking(quad_list,q1,radius,numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2))
     q1.step(dt)
+    q1.same_position(quad_list)
 
-    rules.flocking(quad_list,q2,40,numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2))
+    rules.flocking(quad_list,q2,radius,numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2))
     q2.step(dt)
+    q2.same_position(quad_list)
 
-    rules.flocking(quad_list,q3,40,numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2))
+    rules.flocking(quad_list,q3,radius,numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2))
     q3.step(dt)
+    q3.same_position(quad_list)
 
-    rules.flocking(quad_list,q4,40,numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2))
+
+    rules.flocking(quad_list,q4,radius,numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2))
     q4.step(dt)
+    q4.same_position(quad_list)
 
-    rules.flocking(quad_list,q5,40,numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2))
+
+    rules.flocking(quad_list,q5,radius,numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2))
     q5.step(dt)
+    q5.same_position(quad_list)
 
-    rules.flocking(quad_list,q6,40,numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2))
+
+    rules.flocking(quad_list,q6,radius,numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2))
     q6.step(dt)
+    q6.same_position(quad_list)
+   
    
     # Animation
     if it%frames == 0:
 
         axis3d.cla()
+	
+
         ani.draw3d(axis3d, q1.xyz, q1.Rot_bn(), quadcolor[0])
 	ani.draw3d(axis3d, q2.xyz, q2.Rot_bn(), quadcolor[0])
 	ani.draw3d(axis3d, q3.xyz, q3.Rot_bn(), quadcolor[0])
@@ -165,7 +199,9 @@ for t in time:
         axis3d.set_ylabel('East [m]')
         axis3d.set_zlabel('Up [m]')
         axis3d.set_title("Time %.3f s" %t)
-        pl.pause(0.5)
+	
+	temperature.draw_grid(axis3d)
+        pl.pause(0.001)
         pl.draw()
 	
 	
