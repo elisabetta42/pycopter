@@ -34,12 +34,12 @@ kw = 1/0.18   # rad/s
 att_0 = np.array([0.0, 0.0, 0.0])
 pqr_0 = np.array([0.0, 0.0, 0.0])
 xyz1_0 = np.array([1.0, 1.2, 0.0])
-xyz2_0 = np.array([1.2, 2.0, 0.0])
-xyz3_0 = np.array([-1.1, 2.6, 0.0])
+xyz2_0 = np.array([22.2, 2.0, 0.0])
+xyz3_0 = np.array([-3.1, 20.6, 0.0])
 
-xyz4_0 = np.array([3.0, 3.2, 0.0])
-xyz5_0 = np.array([4.2, 4.0, 0.0])
-xyz6_0 = np.array([-3.2, 4.6, 0.0])
+xyz4_0 = np.array([90.0, 8.2, 0.0])
+xyz5_0 = np.array([10.2, 9.0, 0.0])
+xyz6_0 = np.array([-11.2, 10.6, 0.0])
 v_ned_0 = np.array([0.0, 0.0, 0.0])
 w_0 = np.array([0.0, 0.0, 0.0, 0.0])
 
@@ -83,7 +83,7 @@ tilde_mu = 0e-2*np.array([1, 1, 1])
 fc = form.formation_distance(2, 1, dtriang, mu, tilde_mu, Btriang, 5e-2, 5e-1)
 
 # Simulation parameters
-tf = 2500
+tf = 250
 dt = 5e-2
 time = np.linspace(0, tf, tf/dt)
 it = 0
@@ -139,7 +139,7 @@ q3.yaw_d =  -np.pi
 q4.yaw_d =  -np.pi
 q5.yaw_d =  -np.pi
 q6.yaw_d =  -np.pi
-radius=1000
+radius=3
 for t in time:
     # Simulation
     #X = np.append(q1.xyz[0:2], np.append(q2.xyz[0:2], q3.xyz[0:2]))
@@ -206,55 +206,55 @@ for t in time:
 	
 	
          # Log
-    	q1_log.xyz_h[it, :] = q1.xyz
-    	q1_log.att_h[it, :] = q1.att
-    	q1_log.w_h[it, :] = q1.w
-    	q1_log.v_ned_h[it, :] = q1.v_ned
-    	q1_log.xi_g_h[it] = q1.xi_g
-    	q1_log.xi_CD_h[it] = q1.xi_CD
+    q1_log.xyz_h[it, :] = q1.xyz
+    q1_log.att_h[it, :] = q1.att
+    q1_log.w_h[it, :] = q1.w
+    q1_log.v_ned_h[it, :] = q1.v_ned
+    q1_log.xi_g_h[it] = q1.xi_g
+    q1_log.xi_CD_h[it] = q1.xi_CD
 
 	 # Log
-    	q2_log.xyz_h[it, :] = q2.xyz
-    	q2_log.att_h[it, :] = q2.att
-    	q2_log.w_h[it, :] = q2.w
-    	q2_log.v_ned_h[it, :] = q2.v_ned
-    	q2_log.xi_g_h[it] = q2.xi_g
-    	q2_log.xi_CD_h[it] = q2.xi_CD
+    q2_log.xyz_h[it, :] = q2.xyz
+    q2_log.att_h[it, :] = q2.att
+    q2_log.w_h[it, :] = q2.w
+    q2_log.v_ned_h[it, :] = q2.v_ned
+    q2_log.xi_g_h[it] = q2.xi_g
+    q2_log.xi_CD_h[it] = q2.xi_CD
 
 
  	# Log
-    	q3_log.xyz_h[it, :] = q3.xyz
-    	q3_log.att_h[it, :] = q3.att
-    	q3_log.w_h[it, :] = q3.w
-    	q3_log.v_ned_h[it, :] = q3.v_ned
-    	q3_log.xi_g_h[it] = q3.xi_g
-    	q3_log.xi_CD_h[it] = q3.xi_CD
+    q3_log.xyz_h[it, :] = q3.xyz
+    q3_log.att_h[it, :] = q3.att
+    q3_log.w_h[it, :] = q3.w
+    q3_log.v_ned_h[it, :] = q3.v_ned
+    q3_log.xi_g_h[it] = q3.xi_g
+    q3_log.xi_CD_h[it] = q3.xi_CD
 
 
 	  # Log
-    	q4_log.xyz_h[it, :] = q4.xyz
-    	q4_log.att_h[it, :] = q4.att
-    	q4_log.w_h[it, :] = q4.w
-    	q4_log.v_ned_h[it, :] = q4.v_ned
-    	q4_log.xi_g_h[it] = q4.xi_g
-    	q4_log.xi_CD_h[it] = q4.xi_CD
+    q4_log.xyz_h[it, :] = q4.xyz
+    q4_log.att_h[it, :] = q4.att
+    q4_log.w_h[it, :] = q4.w
+    q4_log.v_ned_h[it, :] = q4.v_ned
+    q4_log.xi_g_h[it] = q4.xi_g
+    q4_log.xi_CD_h[it] = q4.xi_CD
 
 	 # Log
-    	q5_log.xyz_h[it, :] = q5.xyz
-    	q5_log.att_h[it, :] = q5.att
-    	q5_log.w_h[it, :] = q5.w
-    	q5_log.v_ned_h[it, :] = q5.v_ned
-    	q5_log.xi_g_h[it] = q5.xi_g
-    	q5_log.xi_CD_h[it] = q5.xi_CD
+    q5_log.xyz_h[it, :] = q5.xyz
+    q5_log.att_h[it, :] = q5.att
+    q5_log.w_h[it, :] = q5.w
+    q5_log.v_ned_h[it, :] = q5.v_ned
+    q5_log.xi_g_h[it] = q5.xi_g
+    q5_log.xi_CD_h[it] = q5.xi_CD
 
 
  	# Log
-    	q6_log.xyz_h[it, :] = q6.xyz
-    	q6_log.att_h[it, :] = q6.att
-    	q6_log.w_h[it, :] = q6.w
-    	q6_log.v_ned_h[it, :] = q6.v_ned
-    	q6_log.xi_g_h[it] = q6.xi_g
-    	q6_log.xi_CD_h[it] = q6.xi_CD
+    q6_log.xyz_h[it, :] = q6.xyz
+    q6_log.att_h[it, :] = q6.att
+    q6_log.w_h[it, :] = q6.w
+    q6_log.v_ned_h[it, :] = q6.v_ned
+    q6_log.xi_g_h[it] = q6.xi_g
+    q6_log.xi_CD_h[it] = q6.xi_CD
 
 
     it+=1
@@ -318,7 +318,27 @@ pl.ylabel("Velocity [m/s]")
 pl.grid()
 pl.legend()
 
+pl.figure(7)
+pl.plot(time, q1_log.xyz_h[:, 0], label="p_x_1")
+pl.plot(time, q1_log.xyz_h[:, 1], label="p_y_1")
+pl.plot(time, q2_log.xyz_h[:, 0], label="p_x_2")
+pl.plot(time, q2_log.xyz_h[:, 1], label="p_y_2")
+pl.plot(time, q3_log.xyz_h[:, 0], label="p_x_3")
+pl.plot(time, q3_log.xyz_h[:, 1], label="p_y_3")
+pl.plot(time, q4_log.xyz_h[:, 0], label="p_x_4")
+pl.plot(time, q4_log.xyz_h[:, 1], label="p_y_4")
+pl.plot(time, q5_log.xyz_h[:, 0], label="p_x_5")
+pl.plot(time, q5_log.xyz_h[:, 1], label="p_y_5")
+pl.plot(time, q6_log.xyz_h[:, 0], label="p_x_6")
+pl.plot(time, q6_log.xyz_h[:, 1], label="p_y_6")
 
+pl.figure(8)
+pl.plot(q1_log.xyz_h[:, 0], q1_log.xyz_h[:, 1], label="drone 1")
+pl.plot(q2_log.xyz_h[:, 0], q2_log.xyz_h[:, 1], label="drone 2")
+pl.plot(q3_log.xyz_h[:, 0], q3_log.xyz_h[:, 1], label="drone 3")
+pl.plot(q4_log.xyz_h[:, 0], q4_log.xyz_h[:, 1], label="drone 4")
+pl.plot(q5_log.xyz_h[:, 0], q5_log.xyz_h[:, 1], label="drone 5")
+pl.plot(q6_log.xyz_h[:, 0], q6_log.xyz_h[:, 1], label="drone 6")
 
 
 pl.pause(0)

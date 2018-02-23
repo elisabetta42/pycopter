@@ -3,6 +3,16 @@ from scipy import linalg as la
 import math
 
 class quadrotor:
+    density = 0.0005
+    mass = 0.01
+    cutoff = 0.001
+    # prevent very large forces due to discretization/fp inaccuracy
+    min_r2 = (cutoff / 100) ** 2
+    dt = 0.0005
+    box_size = None
+    scale_pos = None
+    next_id = 0
+    energy_correction = 1 # energy normalization
     def __init__(self, tag, m, l, J, CDl, CDr, kt, km, kw, att, \
             pqr, xyz, v_ned, w):
         # physical constants
@@ -16,6 +26,7 @@ class quadrotor:
         self.kt = kt    # Propeller thrust [N s^2]
         self.km = km    # Propeller moment [N m s^2]
         self.kw = kw    # Motor transient [1/s]
+	
 
         # Configuration of the propellers
         self.w_to_Tlmn = np.array([[   -kt,  -kt,  -kt,   -kt],\
