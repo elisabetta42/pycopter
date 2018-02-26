@@ -4,6 +4,7 @@ import numpy
 class PVector:
  x=0
  y=0
+ z=0
  def __init__(self,x,y):
 	self.x=x
 	self.y=y
@@ -29,6 +30,10 @@ class PVector:
  def subScalar(self,s):
        self.x -= s
        self.y -= s
+
+ def addScalar(self,s):
+       self.x += s
+       self.y += s
 
  def mulVector(self,v):
        self.x *= v.x
@@ -105,6 +110,12 @@ class PVector:
 	vector[0]=self.x
 	vector[1]=self.y
 	return vector
+
+ def compare(self,vector,radius):
+	if self.x-vector.x<radius and self.y-vector.y<radius: #and self.z==vector.z
+		return True
+	else: return False
+	
 
 
 

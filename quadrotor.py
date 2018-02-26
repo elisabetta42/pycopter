@@ -1,7 +1,7 @@
 import numpy as np
 from scipy import linalg as la
 import math
-
+from group import Group
 class quadrotor:
     density = 0.0005
     mass = 0.01
@@ -13,9 +13,12 @@ class quadrotor:
     scale_pos = None
     next_id = 0
     energy_correction = 1 # energy normalization
+    
+
     def __init__(self, tag, m, l, J, CDl, CDr, kt, km, kw, att, \
             pqr, xyz, v_ned, w):
         # physical constants
+	self.group=Group()
         self.tag = tag
         self.m = m   # [Kg]
         self.l = l   # [m]

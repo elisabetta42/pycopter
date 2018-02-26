@@ -11,7 +11,8 @@ import animation as ani
 import hector_rules as rules
 import temperature_function as temperature
 from sys import exit
-
+import plugin
+from group import Group
 # Quadrotor
 m = 0.65 # Kg
 l = 0.23 # m
@@ -34,10 +35,10 @@ kw = 1/0.18   # rad/s
 att_0 = np.array([0.0, 0.0, 0.0])
 pqr_0 = np.array([0.0, 0.0, 0.0])
 xyz1_0 = np.array([1.0, 1.2, 0.0])
-xyz2_0 = np.array([22.2, 2.0, 0.0])
+xyz2_0 = np.array([2.2, 2.0, 0.0])
 xyz3_0 = np.array([-3.1, 20.6, 0.0])
 
-xyz4_0 = np.array([90.0, 8.2, 0.0])
+xyz4_0 = np.array([12.0, 8.2, 0.0])
 xyz5_0 = np.array([10.2, 9.0, 0.0])
 xyz6_0 = np.array([-11.2, 10.6, 0.0])
 v_ned_0 = np.array([0.0, 0.0, 0.0])
@@ -139,7 +140,7 @@ q3.yaw_d =  -np.pi
 q4.yaw_d =  -np.pi
 q5.yaw_d =  -np.pi
 q6.yaw_d =  -np.pi
-radius=3
+radius=10
 for t in time:
     # Simulation
     #X = np.append(q1.xyz[0:2], np.append(q2.xyz[0:2], q3.xyz[0:2]))
@@ -150,30 +151,39 @@ for t in time:
     #q2.set_a_2D_alt_lya(U[2:4], -alt_d)
     #q3.set_a_2D_alt_lya(U[4:6], -alt_d)
     # Simulation
-    rules.flocking(quad_list,q1,radius,numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2))
+    
+    q1.group.syncronize(q1,quad_list,radius)
+    rules.flocking(q1,radius,numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2))
     q1.step(dt)
     q1.same_position(quad_list)
-
-    rules.flocking(quad_list,q2,radius,numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2))
+    
+    
+    q2.group.syncronize(q2,quad_list,radius)
+    rules.flocking(q2,radius,numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2))
     q2.step(dt)
     q2.same_position(quad_list)
 
-    rules.flocking(quad_list,q3,radius,numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2))
+    
+    q3.group.syncronize(q3,quad_list,radius)
+    rules.flocking(q3,radius,numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2))
     q3.step(dt)
     q3.same_position(quad_list)
 
-
-    rules.flocking(quad_list,q4,radius,numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2))
+  
+    q4.group.syncronize(q4,quad_list,radius)
+    rules.flocking(q4,radius,numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2))
     q4.step(dt)
     q4.same_position(quad_list)
 
-
-    rules.flocking(quad_list,q5,radius,numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2))
+    
+    q5.group.syncronize(q5,quad_list,radius)
+    rules.flocking(q5,radius,numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2))
     q5.step(dt)
     q5.same_position(quad_list)
 
-
-    rules.flocking(quad_list,q6,radius,numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2))
+    
+    q6.group.syncronize(q6,quad_list,radius)
+    rules.flocking(q6,radius,numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2),numpy.random.uniform(0.9, 1.2))
     q6.step(dt)
     q6.same_position(quad_list)
    
@@ -255,13 +265,45 @@ for t in time:
     q6_log.v_ned_h[it, :] = q6.v_ned
     q6_log.xi_g_h[it] = q6.xi_g
     q6_log.xi_CD_h[it] = q6.xi_CD
-
+    
+  
 
     it+=1
  
 # Stop if crash
     if (q1.crashed == 1):
         break
+
+
+
+#for vector in q1.group.fire_list:
+#    	print vector.x, " ", vector.y, " "
+print len(q1.group.fire_list), "q1"
+
+	
+#for vector in q2.group.fire_list:
+#    	print vector.x, " ", vector.y, " " 
+print len(q2.group.fire_list), "q2"
+
+    
+#for vector in q3.group.fire_list:
+#    	print vector.x, " ", vector.y, " " 
+print len(q3.group.fire_list), "q3"
+
+
+#for vector in q4.group.fire_list:
+#   	print vector.x, " ", vector.y, " " 
+print len(q4.group.fire_list), "q4"
+
+    
+#for vector in q5.group.fire_list:
+#   	print vector.x, " ", vector.y, " " 
+print len(q5.group.fire_list), "q5"
+
+
+#for vector in q6.group.fire_list:
+#   	print vector.x, " ", vector.y, " " 
+print len(q6.group.fire_list), "q6"
 
 
 pl.figure(1)
@@ -339,6 +381,7 @@ pl.plot(q3_log.xyz_h[:, 0], q3_log.xyz_h[:, 1], label="drone 3")
 pl.plot(q4_log.xyz_h[:, 0], q4_log.xyz_h[:, 1], label="drone 4")
 pl.plot(q5_log.xyz_h[:, 0], q5_log.xyz_h[:, 1], label="drone 5")
 pl.plot(q6_log.xyz_h[:, 0], q6_log.xyz_h[:, 1], label="drone 6")
+
 
 
 pl.pause(0)

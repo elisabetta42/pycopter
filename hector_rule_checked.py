@@ -2,11 +2,8 @@
 from pvector import PVector
 import numpy
 import math
-import temperature_function as temp
-def flocking(current,radius, kva, ks, kc, ke):
-    agents=current.group.neibourgh_list
-    print len(agents), "length agents"
-    print current.tag
+def flocking(agents, current,radius, kva, ks, kc, ke):
+
     neighbor_count = 0;
     velAvg = PVector(0,0)
     centroid = PVector(0,0)
@@ -19,17 +16,6 @@ def flocking(current,radius, kva, ks, kc, ke):
     alt_d=10
     limitX=15
     limitY=15
-    avoid_vector=numpy.array([0.0,0.0])
-    avoid_coefficient=0
-    is_fire=locate_fire(current,position)
-
-    if is_fire==True:
-	#avoid_vector=is_fire
-	avoid_coefficient=-1
-
-    if len(agents)==0:
-	   velocity=PVector(current.v_ned_d[0],current.v_ned_d[1])
-	   return velocity.return_as_vector()
     #We check all the agents on the screen.
     #Any agent closer than radius units is a neighbor.
     for it in agents:
@@ -39,7 +25,7 @@ def flocking(current,radius, kva, ks, kc, ke):
         #relative_position.addVector(neighbor)
 	#relative_position=PVector(relativePosition[0],relativePosition[1])
 	d=math.sqrt(pow((position.x - neighbor.x), 2) + pow((position.y - neighbor.y), 2))
-        if d < 10000:
+        if d/10 < radius:
             #We have found a neighbor
             neighbor_count=neighbor_count+1
 
@@ -73,11 +59,10 @@ def flocking(current,radius, kva, ks, kc, ke):
     cohesion.normalize();
     separation.normalize();
 
-    if neighbor_count == 7:
-	print "I am here"
-        #desired_velocity = velocity
-	#desiredVel=PVector(current.v_ned_d[0],current.v_ned_d[1])
-	#desired_velocity=desiredVel.return_as_vector()
+    if neighbor_count == 1:
+       #desired_velocity = velocity
+	desiredVel=PVector(current.v_ned_d[0],current.v_ned_d[1])
+	desired_velocity=desiredVel.return_as_vector()
 	
     else:
 	vel_avg=velAvg.return_as_vector()
@@ -86,34 +71,24 @@ def flocking(current,radius, kva, ks, kc, ke):
 	v_target=tend_to_place(agents,current)
 	random_walk=randomWalkb(position.x,position.y)
 	v_bound_position=bound_position(17,-17,17,-17,position.x,position.y,3)
-	desired_velocity=kva*vel_avg + ks*v_separation + kc*v_cohesion+ke*v_target#+avoid_coefficient*position.return_as_vector()
+	#avoid_vector=getAvoidAvoids(position,1)
+	avoid_vector=apply_force(position,obstacle,current)
+	desired_velocity=kva*vel_avg + ks*v_separation + kc*v_cohesion
+	#+5*ke*v_target
+	#kva*vel_avg + ks*v_separation + 5*kc*v_cohesion + 3*ke*v_bound_position+ke*v_target
+        #kva*vel_avg + ks*v_separation + kc*v_cohesion +ke*v_bound_position+ks*avoid_vector
 	desiredVel=PVector(desired_velocity[0],desired_velocity[1])
-       
+        #desired_velocity +=kva*velAvg + ks*separation + kc*cohesion;
 	
     	if(desiredVel.magnitude()>2):
 		desiredVel.normalize()
 		desiredVel.mulScalar(2)
     desired_vel=desiredVel.return_as_vector()
     current.set_v_2D_alt_lya(desired_vel,-alt_d)
-    
-
-    
+	
     
     #if position.x < 0 or position.x > limitX or position.y < 0 or position.y or limitY:
     #	current.set_v_2D_alt_lya(-error_theta,-alt_d)
-
-def locate_fire(current,position):
-	value=temp.temperature_sensor(position.x,position.y,0.0,0.0)
-	print "value", value
-	
-	if value > 800:
-		print current.tag, "I am really hot!"
-		current.group.add_point(current,position,1)
-		#apply_force(obstacle,position,current)
-		return True 
-		#current.set_v_2D_alt_lya(position.return_as_vector()*-1,-alt_d)
-		#return position.return_as_vector()
-	return False
 
 def tend_to_place(agents, current):
 	target=PVector(0,0)
@@ -203,8 +178,6 @@ def apply_force_from_coords(ox, oy,position,current_drone):
 	
 	
 	return direction.return_as_vector()
-
-
 
 
 
